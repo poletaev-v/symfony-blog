@@ -37,6 +37,11 @@ class Post
     /**
      * @ORM\Column(type="string")
      */
+    private ?string $slug = null;
+
+    /**
+     * @ORM\Column(type="string")
+     */
     private ?string $description = null;
 
     /**
@@ -77,6 +82,21 @@ class Post
     public function getTitle(): ?string
     {
         return $this->title;
+    }
+
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): void
+    {
+        $this->slug = $slug;
     }
 
     public function getDescription(): ?string

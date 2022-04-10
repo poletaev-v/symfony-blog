@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Post;
+use App\Pagination\Paginator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -43,6 +44,21 @@ class PostRepository extends ServiceEntityRepository
         if ($flush) {
             $this->_em->flush();
         }
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function findLatest(int $page = 1, string $sortMethod = "DESC"): Paginator
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->addSelect('a')
+            ->innerJoin('p.author', 'a')
+            ->where('p.publishedAt <= :now AND p.isActive = true')
+            ->orderBy('p.publishedAt', $sortMethod)
+            ->setParameter('now', new \DateTime());
+
+        return (new Paginator($qb))->paginate($page);
     }
 
     // /**

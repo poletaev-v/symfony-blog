@@ -21,6 +21,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private int $id;
 
     /**
+     * @ORM\Column(type="string")
+     */
+    private ?string $fullName = null;
+
+    /**
+     * @ORM\Column(type="string", unique=true)
+     */
+    private ?string $username = null;
+
+    /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
     private string $email;
@@ -39,6 +49,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function setFullName(string $fullName): void
+    {
+        $this->fullName = $fullName;
+    }
+
+    public function getFullName(): ?string
+    {
+        return $this->fullName;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->getUserIdentifier();
+    }
+
+    public function setUsername(string $username): void
+    {
+        $this->username = $username;
     }
 
     public function getEmail(): string
@@ -60,15 +90,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
-    }
-
-    /**
-     * @deprecated since Symfony 5.3, use getUserIdentifier instead
-     */
-    public function getUsername(): string
-    {
-        return (string) $this->email;
+        return $this->username;
     }
 
     /**

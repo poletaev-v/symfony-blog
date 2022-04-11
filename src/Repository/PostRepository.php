@@ -5,8 +5,6 @@ namespace App\Repository;
 use App\Entity\Post;
 use App\Pagination\Paginator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -22,10 +20,6 @@ class PostRepository extends ServiceEntityRepository
         parent::__construct($registry, Post::class);
     }
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function add(Post $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
@@ -34,10 +28,6 @@ class PostRepository extends ServiceEntityRepository
         }
     }
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     public function remove(Post $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
@@ -54,7 +44,8 @@ class PostRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('p')
             ->addSelect('a')
             ->innerJoin('p.author', 'a')
-            ->where('p.publishedAt <= :now AND p.isActive = true')
+            ->where('p.publishedAt <= :now')
+            ->andWhere('p.isActive = true')
             ->orderBy('p.publishedAt', $sortMethod)
             ->setParameter('now', new \DateTime());
 

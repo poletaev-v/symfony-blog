@@ -7,3 +7,15 @@ index:
 index_paginated:
     path: /page/{page<[1-9]\d*>}
     controller: App\Controller\BlogController::index
+
+app_login:
+    path: /login
+    controller: App\Controller\SecurityController::login
+
+app_logout:
+    path: /logout
+    controller: App\Controller\SecurityController::logout
+
+admin:
+    path: /admin
+    controller: App\Controller\Admin\DashboardController::index

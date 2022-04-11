@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Category;
 use App\Entity\Comment;
 use App\Entity\Post;
 use App\Entity\User;
@@ -28,6 +29,7 @@ class AppFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $this->loadUsers($manager);
+        $this->loadCategories($manager);
         $this->loadPosts($manager);
     }
 
@@ -51,12 +53,36 @@ class AppFixtures extends Fixture
     /**
      * @throws \Exception
      */
+    private function loadCategories(ObjectManager $manager): void
+    {
+        $tempCategoryName = null;
+        foreach ($this->getCategoryData() as [$name, $slug]) {
+            $category = new Category();
+            $category->setName($name);
+            $category->setSlug($slug);
+
+            if (!is_null($tempCategoryName) && $this->hasReference($tempCategoryName)) {
+                $category->setParentCategory($this->getReference($tempCategoryName));
+            }
+
+            $manager->persist($category);
+            $this->addReference($name, $category);
+            $tempCategoryName = $name;
+        }
+
+        $manager->flush();
+    }
+
+    /**
+     * @throws \Exception
+     */
     private function loadPosts(ObjectManager $manager): void
     {
-        foreach ($this->getPostData() as [$title, $slug, $description, $publishedAt, $author]) {
+        foreach ($this->getPostData() as [$title, $slug, $category, $description, $publishedAt, $author]) {
             $post = new Post();
             $post->setTitle($title);
             $post->setSlug($slug);
+            $post->setCategory($category);
             $post->setShortDescription(mb_strimwidth($description, 0, 80, "..."));
             $post->setDescription($description);
             $post->setPublishedAt($publishedAt);
@@ -83,6 +109,33 @@ class AppFixtures extends Fixture
             ['Jane Doe', 'jane_admin', 'qwerty', 'jane_admin@symfony.com', ['ROLE_ADMIN']],
             ['Tom Doe', 'tom_admin', 'qwerty', 'tom_admin@symfony.com', ['ROLE_ADMIN']],
             ['John Doe', 'john_user', 'qwerty', 'john_user@symfony.com', ['ROLE_USER']],
+            ['admin', 'admin', '12345qwerty', 'hapdev22@gmail.com', ['ROLE_ADMIN']],
+        ];
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function getCategoryData(): array
+    {
+        $categories = [];
+        foreach ($this->getCategoryNames() as $name) {
+            $categories[] = [
+                $name,
+                $this->slugger->slug($name)->lower(),
+            ];
+        }
+
+        return $categories;
+    }
+
+    private function getCategoryNames(): array
+    {
+        return [
+            'On the agenda',
+            'Top news',
+            'News of your city',
+            'Promotional news',
         ];
     }
 
@@ -92,10 +145,13 @@ class AppFixtures extends Fixture
     private function getPostData(): array
     {
         $posts = [];
+        $categories = $this->getCategoryNames();
+        $cntCategories = count($categories);
         foreach ($this->getPhrases() as $i => $title) {
             $posts[] = [
                 $title,
                 $this->slugger->slug($title)->lower(),
+                $this->getReference($categories[0 === $i ? 0 : random_int(0, ($cntCategories - 1))]),
                 $this->getPostDescription(),
                 new \DateTime('now - ' . $i . 'days'),
                 $this->getReference(['jane_admin', 'tom_admin'][0 === $i ? 0 : random_int(0, 1)]),

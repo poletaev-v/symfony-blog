@@ -40,7 +40,7 @@ class Post
     private ?string $slug = null;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="text")
      */
     private ?string $description = null;
 
@@ -67,6 +67,12 @@ class Post
      * @ORM\OrderBy({"publishedAt": "DESC"})
      */
     private Collection $comments;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="posts")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private Category $category;
 
     public function __construct()
     {
@@ -139,14 +145,24 @@ class Post
         $this->publishedAt = $publishedAt;
     }
 
-    public function getActive(): bool
+    public function getIsActive(): bool
     {
         return $this->isActive;
     }
 
-    public function setActive(bool $active): void
+    public function setIsActive(bool $active): void
     {
         $this->isActive = $active;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(Category $category): void
+    {
+        $this->category = $category;
     }
 
     public function getComments(): Collection

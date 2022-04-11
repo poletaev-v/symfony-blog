@@ -14,6 +14,7 @@ class BlogController extends AbstractController
      */
     public function index(Request $request, int $page, PostRepository $posts): Response
     {
+        // TODO: type switch with sort method - "DESC", "ASC"
         $sortMethod = $request->get("method");
         $latestPosts = $posts->findLatest($page, empty($sortMethod) ? "DESC" : $sortMethod);
         return $this->render('blog/index.html.twig', [

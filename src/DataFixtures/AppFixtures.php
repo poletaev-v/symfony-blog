@@ -109,7 +109,7 @@ class AppFixtures extends Fixture
             ['Jane Doe', 'jane_admin', 'qwerty', 'jane_admin@symfony.com', ['ROLE_ADMIN']],
             ['Tom Doe', 'tom_admin', 'qwerty', 'tom_admin@symfony.com', ['ROLE_ADMIN']],
             ['John Doe', 'john_user', 'qwerty', 'john_user@symfony.com', ['ROLE_USER']],
-            ['admin', 'admin', '12345qwerty', 'hapdev22@gmail.com', ['ROLE_ADMIN']],
+            ['admin', 'admin', '12345qwerty', 'admin@test.ru', ['ROLE_ADMIN']],
         ];
     }
 

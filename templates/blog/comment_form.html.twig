@@ -1,0 +1,21 @@
+{{ form_start(form, {method: 'POST', action: path('comment_new', {'postSlug': post.slug})}) }}
+
+<fieldset>
+    <legend>
+        <i class="fa fa-comment" aria-hidden="true"></i> Add comment
+    </legend>
+
+    {{ form_errors(form) }}
+
+    <div class="form-group {% if not form.content.vars.valid %}has-error{% endif %}">
+        Content
+        {{ form_widget(form.content, {attr: {rows: 10}}) }}
+    </div>
+
+    <div class="form-group">
+        <button class="btn btn-primary pull-right" type="submit">
+            <i class="fa fa-paper-plane" aria-hidden="true"></i> Publish comment
+        </button>
+    </div>
+</fieldset>
+{{ form_end(form) }}

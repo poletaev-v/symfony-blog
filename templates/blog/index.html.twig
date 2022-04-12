@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Welcome!</title>
-</head>
-<body>
-{% block main %}
+{% extends 'base.html.twig' %}
+{% block body %}
     {% for post in paginator.results %}
         <article class="post">
             <h2>
@@ -52,5 +46,4 @@
         </div>
     {% endif %}
 {% endblock %}
-</body>
-</html>
+

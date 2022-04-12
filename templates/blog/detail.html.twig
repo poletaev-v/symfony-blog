@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="post-wrapper">
+        <h2>{{ post.title }}</h2>
+        <div class="post-content">
+            {{ post.description }}
+        </div>
+        <div class="post-date">
+            {{ post.publishedAt|format_datetime('long', 'medium', '', 'UTC') }}
+        </div>
+
+        <div class="post-comments">
+            {% for comment in post.comments %}
+                <div class="comment-detail">
+                    <div class="comment-content">
+                        {{ comment.content }}
+                    </div>
+                    <div class="comment-meta">
+                        <div class="comment-publishedAt">
+                            {{ comment.publishedAt|format_datetime('long', 'medium', '', 'UTC') }}
+                        </div>
+                        <div class="comment-author">
+                            {{ comment.author.fullname }}
+                        </div>
+                    </div>
+
+                </div>
+            {% endfor %}
+        </div>
+
+        {{ include('blog/comment_form.html.twig') }}
+    </div>
+{% endblock %}

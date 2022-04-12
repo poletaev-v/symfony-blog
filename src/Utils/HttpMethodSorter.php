@@ -20,7 +20,11 @@ class HttpMethodSorter
     public function getMethod(): string
     {
         $sortMethod = $this->request->get(self::METHOD_KEY);
-        if (!in_array($sortMethod, $this->availableMethods)) {
+        if (is_null($sortMethod)) {
+            return $this->defaultMethodSort;
+        }
+
+        if (!in_array(strtolower($sortMethod), $this->availableMethods)) {
             $sortMethod = $this->defaultMethodSort;
         }
         return $sortMethod;

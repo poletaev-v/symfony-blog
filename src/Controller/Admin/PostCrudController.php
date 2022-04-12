@@ -10,19 +10,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\SlugField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use Symfony\Component\String\Slugger\SluggerInterface;
 
 class PostCrudController extends AbstractCrudController
 {
-    private SluggerInterface $slugger;
-
-    public function __construct(SluggerInterface $slugger)
-    {
-        $this->slugger = $slugger;
-    }
-
     public static function getEntityFqcn(): string
     {
         return Post::class;
@@ -33,10 +26,8 @@ class PostCrudController extends AbstractCrudController
         /**
          * @var Post $entityInstance
          */
-        dump($entityInstance);
-        die;
         $entityInstance->setAuthor($this->getUser());
-        $entityInstance->setSlug($this->slugger->slug($entityInstance->getTitle())->lower());
+        $entityInstance->setDescription(strip_tags($entityInstance->getDescription()));
         $entityManager->persist($entityInstance);
         $entityManager->flush();
     }
@@ -61,6 +52,8 @@ class PostCrudController extends AbstractCrudController
                 ->hideWhenCreating()
                 ->hideWhenUpdating(),
             TextField::new('title'),
+            SlugField::new('slug')
+                ->setTargetFieldName('title'),
             AssociationField::new('category'),
             TextField::new('shortDescription'),
             TextEditorField::new('description'),

@@ -39,7 +39,7 @@ class PostRepository extends ServiceEntityRepository
     /**
      * @throws \Exception
      */
-    public function findLatest(int $page = 1, string $sortMethod = "DESC"): Paginator
+    public function findLatest(int $page, string $sortMethod): Paginator
     {
         $qb = $this->createQueryBuilder('p')
             ->addSelect('a')
@@ -51,33 +51,4 @@ class PostRepository extends ServiceEntityRepository
 
         return (new Paginator($qb))->paginate($page);
     }
-
-    // /**
-    //  * @return Post[] Returns an array of Post objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Post
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

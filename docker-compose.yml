@@ -10,7 +10,7 @@ services:
     working_dir: /var/www
     volumes:
       - ./:/var/www
-      - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./config/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     depends_on:
       - db
 
@@ -20,7 +20,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./:/var/www
-      - ./nginx/conf.d/:/etc/nginx/conf.d/
+      - ./config/nginx/conf.d/:/etc/nginx/conf.d/
     ports:
       - "8000:80"
       - "443:443"

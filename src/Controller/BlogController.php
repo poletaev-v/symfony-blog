@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\PostRepository;
+use App\Utils\HttpMethodSorter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,9 +15,8 @@ class BlogController extends AbstractController
      */
     public function index(Request $request, int $page, PostRepository $posts): Response
     {
-        // TODO: type switch with sort method - "DESC", "ASC"
-        $sortMethod = $request->get("method");
-        $latestPosts = $posts->findLatest($page, empty($sortMethod) ? "DESC" : $sortMethod);
+        $sortMethod = (new HttpMethodSorter($request))->getMethod();
+        $latestPosts = $posts->findLatest($page, $sortMethod);
         return $this->render('blog/index.html.twig', [
             'title' => 'Blog index page',
             'paginator' => $latestPosts,

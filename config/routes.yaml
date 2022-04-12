@@ -8,6 +8,15 @@ index_paginated:
     path: /page/{page<[1-9]\d*>}
     controller: App\Controller\BlogController::index
 
+blog_detail:
+    path: /news/{slug}
+    controller: App\Controller\BlogController::show
+
+comment_new:
+    path: /comment/{postSlug}/new
+    methods: POST
+    controller: App\Controller\BlogController::commentNew
+
 app_login:
     path: /login
     controller: App\Controller\SecurityController::login

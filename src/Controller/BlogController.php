@@ -46,6 +46,10 @@ class BlogController extends AbstractController
 
     public function commentNew(Request $request, PostRepository $posts, EventDispatcherInterface $eventDispatcher, EntityManagerInterface $entityManager): Response
     {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $slug = array_filter(explode("/", $request->getPathInfo()), fn($partUrl) => !in_array($partUrl, ["comment", "new", null]));
         $post = $posts->findOneBy(["slug" => $slug]);
         $comment = new Comment();
@@ -60,7 +64,7 @@ class BlogController extends AbstractController
             $entityManager->flush();
             $eventDispatcher->dispatch(new CommentCreatedEvent($comment));
 
-            return $this->redirectToRoute('index', ['slug' => $post->getSlug()]);
+            return $this->redirectToRoute('blog_detail', ['slug' => $post->getSlug()]);
         }
 
         return $this->render('blog/comment_form_error.html.twig', [

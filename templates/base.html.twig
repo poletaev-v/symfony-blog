@@ -11,6 +11,13 @@
         <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     {% endblock %}
 </head>
+
+<header>
+    {% block menu %}
+        {{ menu|raw }}
+    {% endblock %}
+</header>
+
 <body>
 <div class="container">
     {% block body %}{% endblock %}

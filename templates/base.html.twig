@@ -14,7 +14,9 @@
 
 <header>
     {% block menu %}
-        {{ menu|raw }}
+        {% if menu is defined %}
+            {{ menu|raw }}
+        {% endif %}
     {% endblock %}
 </header>
 

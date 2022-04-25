@@ -37,3 +37,14 @@ services:
       - ./.data/db:/var/lib/postgresql/data:rw
     ports:
       - "5432:5432"
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    volumes:
+      - ./.data/redis:/data
+      - ./config/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+      - "6379:6379"

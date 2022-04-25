@@ -14,15 +14,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Cache\CacheInterface;
 
 class BlogController extends AbstractController
 {
     /**
      * @throws \Exception
      */
-    public function index(Request $request, int $page, PostRepository $postRepo, CategoryRepository $categoryRepo): Response
+    public function index(
+        Request            $request,
+        int                $page,
+        PostRepository     $postRepo,
+        CategoryRepository $categoryRepo,
+        CacheInterface     $cache
+    ): Response
     {
-        $menu = (new Menu($categoryRepo))->load();
+        $menu = (new Menu($categoryRepo, $cache))->load();
         $sortMethod = (new HttpMethodSorter($request))->getMethod();
         $latestPosts = $postRepo->findLatest($page, $sortMethod);
         return $this->render('blog/index.html.twig', [
@@ -32,14 +39,19 @@ class BlogController extends AbstractController
         ]);
     }
 
-    public function show(string $slug, PostRepository $postRepo, CategoryRepository $categoryRepo): Response
+    public function show(
+        string             $slug,
+        PostRepository     $postRepo,
+        CategoryRepository $categoryRepo,
+        CacheInterface     $cache
+    ): Response
     {
         $post = $postRepo->findOneBy(["slug" => $slug]);
         if (is_null($post)) {
             return $this->redirectToRoute('index');
         }
 
-        $menu = (new Menu($categoryRepo))->load();
+        $menu = (new Menu($categoryRepo, $cache))->load();
         $form = $this->createForm(CommentType::class);
         return $this->render('blog/detail.html.twig', [
             'title' => 'Post detail page',
@@ -49,13 +61,21 @@ class BlogController extends AbstractController
         ]);
     }
 
-    public function commentNew(Request $request, PostRepository $postRepo, EventDispatcherInterface $eventDispatcher, EntityManagerInterface $entityManager): Response
+    public function commentNew(
+        Request                  $request,
+        PostRepository           $postRepo,
+        EventDispatcherInterface $eventDispatcher,
+        EntityManagerInterface   $entityManager
+    ): Response
     {
         if (!$this->getUser()) {
             return $this->redirectToRoute('app_login');
         }
 
-        $slug = array_filter(explode("/", $request->getPathInfo()), fn($partUrl) => !in_array($partUrl, ["comment", "new", null]));
+        $slug = array_filter(
+            explode("/", $request->getPathInfo()),
+            fn($partUrl) => !in_array($partUrl, ["comment", "new", null])
+        );
         $post = $postRepo->findOneBy(["slug" => $slug]);
         $comment = new Comment();
         $comment->setAuthor($this->getUser());

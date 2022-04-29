@@ -64,7 +64,9 @@ class Menu
                     continue;
                 }
 
-                $rootCategory->insert($list->current());
+                if ($rootCategory) {
+                    $rootCategory->insert($list->current());
+                }
             }
         }
 
@@ -75,8 +77,8 @@ class Menu
         return $this;
     }
 
-    public function getView(): string
+    public function getContent(): string
     {
-        return MenuTemplate::render($this->categoryList);
+        return MenuTemplate::getContent($this->categoryList);
     }
 }

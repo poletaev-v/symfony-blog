@@ -1,6 +1,6 @@
 include ./.env
 
-start: dc-up composer-install migration-up fixtures-load
+start: dc-up composer-install migration-up fixtures-load tests-exec
 
 stop: migration-down dc-down
 
@@ -21,3 +21,6 @@ migration-down:
 
 fixtures-load:
 	docker exec -it app /bin/sh -c "/usr/local/bin/php bin/console doctrine:fixtures:load -n"
+
+tests-exec:
+	docker exec -it app /bin/sh -c "/usr/local/bin/php bin/phpunit"

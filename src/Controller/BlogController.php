@@ -35,7 +35,7 @@ class BlogController extends AbstractController
         return $this->render('blog/index.html.twig', [
             'title' => 'Blog index page',
             'paginator' => $latestPosts,
-            'menu' => $menu->getView(),
+            'menu' => $menu->getContent(),
         ]);
     }
 
@@ -57,7 +57,7 @@ class BlogController extends AbstractController
             'title' => 'Post detail page',
             'post' => $post,
             'form' => $form->createView(),
-            'menu' => $menu->getView(),
+            'menu' => $menu->getContent(),
         ]);
     }
 

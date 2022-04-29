@@ -10,7 +10,7 @@ services:
     working_dir: /var/www
     volumes:
       - ./:/var/www
-      - ./config/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
     depends_on:
       - db
 
@@ -20,7 +20,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./:/var/www
-      - ./config/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
     ports:
       - "8000:80"
       - "443:443"
@@ -45,6 +45,6 @@ services:
     command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     volumes:
       - ./.data/redis:/data
-      - ./config/redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
     ports:
       - "6379:6379"

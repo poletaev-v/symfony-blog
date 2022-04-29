@@ -57,14 +57,21 @@ class Category
         return $this->id;
     }
 
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
+
     public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName(string $name): void
+    public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
     }
 
     public function getSlug(): ?string
@@ -82,13 +89,20 @@ class Category
         return $this->parentCategory;
     }
 
-    public function setParentCategory(Category $parentCategory): void
+    public function setParentCategory(Category $parentCategory): self
     {
         $this->parentCategory = $parentCategory;
+        return $this;
     }
 
     public function getPosts(): Collection
     {
         return $this->posts;
+    }
+
+    public function setPosts(Collection $posts): self
+    {
+        $this->posts = $posts;
+        return $this;
     }
 }
